@@ -10,7 +10,14 @@ INSERT_MOVIE = '''INSERT INTO movies (title, release_date) VALUES (?, ?);'''
 INSERT_WATCHED_MOVIE = '''INSERT into watched (watcher_name, movie_id) values (?, ?);'''
 SELECT_ALL_MOVIES = '''SELECT * FROM movies;'''
 SELECT_UPCOMING_MOVIES = '''SELECT * FROM movies WHERE release_date > ?;'''
-SELECT_WATCHED_MOVIES = '''SELECT * FROM watched WHERE watcher_name = ?;'''
+SELECT_WATCHED_MOVIES = '''
+SELECT movies.*,
+FROM movies 
+JOIN watched
+ON movies.id = watched.movie_id
+JOIN users
+ON watched.watcher_name = users.username
+WHERE users.username = ?;'''
 SET_WATCHED = '''UPDATE movies SET watched = 1 WHERE title = ?;'''
 DELETE_MOVIE = '''DELETE FROM movies WHERE title = ?;'''
 INSERT_USER = '''INSERT INTO users (username) values (?);'''

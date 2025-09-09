@@ -31,11 +31,16 @@ def print_movie_list(heading, movies):
         print(f'{movie[0]} - {movie[1]} le {human_date}')
     print("---- \n")
 
-def print_watched_movies(heading, movies):
-    print(f'---- FILMS VISIONNES PAR {heading} -----')
-    for number, movie in enumerate(movies):
-        print(f'{number} - {movie[1]} le')
-    print("---- \n")
+def prompt_show_watched_movies():
+    username2 = input("Nom d'utilisateur : ")
+    movies2 = database.get_watched_movie(username2)
+    if movies2:
+        print(f'---- FILMS VISIONNES PAR {username2} -----')
+        for number, movie in enumerate(movies2):
+            print(f'{number} - {movie[1]} le')
+        print("---- \n")
+    else:
+        print("Cet utilisateur n'a pas visionné de film !")
 
 def prompt_set_watched():
     id = input("ID du film : ")
@@ -59,9 +64,7 @@ while (user_input := input(menu)) != "7":
     elif user_input == "4":
         prompt_set_watched()
     elif user_input == "5":
-        username = "Quel utilisateur ? : "
-        movies = database.get_watched_movie(username)
-        print_watched_movies(username, movies)
+        prompt_show_watched_movies()
     elif user_input == "6":
         prompt_add_user()
     else:
