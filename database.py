@@ -5,7 +5,7 @@ connex = sqlite3.connect("data.db")
 
 CREATE_MOVIES_TABLE = '''CREATE TABLE IF NOT EXISTS movies (id INTEGER, title TEXT, release_date TIMESTAMP, PRIMARY KEY(id));'''
 CREATE_WATCHED_TABLE = '''CREATE TABLE IF NOT EXISTS watched (watcher_name TEXT, movie_id INTEGER, PRIMARY KEY(watcher_name));'''
-CREATE_USERS_TABLE = '''CREATE TABLE IF NOT EXISTS users (username TEXT, movie_id INTEGER, FOREIGN KEY(username) REFERENCES watched(watcher_name), FOREIGN KEY(movie_id) REFERENCES movies(id)'''
+CREATE_USERS_TABLE = '''CREATE TABLE IF NOT EXISTS users (username TEXT, movie_id INTEGER, FOREIGN KEY(username) REFERENCES watched(watcher_name), FOREIGN KEY(movie_id) REFERENCES movies(id));'''
 INSERT_MOVIE = '''INSERT INTO movies (title, release_date) VALUES (?, ?);'''
 INSERT_WATCHED_MOVIE = '''INSERT into watched (watcher_name, movie_id) values (?, ?);'''
 SELECT_ALL_MOVIES = '''SELECT * FROM movies;'''
@@ -21,6 +21,16 @@ WHERE users.username = ?;'''
 SET_WATCHED = '''UPDATE movies SET watched = 1 WHERE title = ?;'''
 DELETE_MOVIE = '''DELETE FROM movies WHERE title = ?;'''
 INSERT_USER = '''INSERT INTO users (username) values (?);'''
+SEARCH_MOVIE = '''
+SELECT *
+FROM movies
+WHERE title LIKE ?;'''
+
+def search_movie(title):
+    with connex:
+        cursor = connex.cursor()
+        cursor.execute(SEARCH_MOVIE, (f"{title}%",))
+        return cursor.fetchall()
 
 def create_tables():
     with connex:

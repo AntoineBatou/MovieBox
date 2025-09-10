@@ -8,7 +8,8 @@ menu = """Veuillez sélectionner l'une des options suivantes :
 4) Regarder un film
 5) Voir les films visionnés.
 6) Ajouter un utilisateur
-7) Quitter.
+7) Chercher un film
+8) Quitter.
 Your selection: """
 welcome = "Bienvenue dans l'application watchlist !"
 
@@ -51,8 +52,12 @@ def prompt_add_user():
     username = input("Nom de l'utilisateur :")
     database.add_user(username)
 
+def prompt_search_movie():
+    title = input("Titre du film à chercher ? :")
+    movies = database.search_movie(title)
+    return movies
 
-while (user_input := input(menu)) != "7":
+while (user_input := input(menu)) != "8":
     if user_input == "1":
         prompt_add_movie()
     elif user_input == "2":
@@ -67,5 +72,11 @@ while (user_input := input(menu)) != "7":
         prompt_show_watched_movies()
     elif user_input == "6":
         prompt_add_user()
+    elif user_input == "7":
+        movies = prompt_search_movie()
+        if movies:
+            print_movie_list("TROUVES", movies)
+        else:
+            print("Aucun film n'a été trouvé !")
     else:
         print("Entrée invalide, veuillez réessayer !")
